@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>task 3.1</title>
+    <style>
+        ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;            
+        }
+
+        button {
+            cursor: pointer;
+            width: 200px;
+            height: 40px;
+            font-size: 32px;
+        }
+
+        p {
+            text-align: center;
+            font-size: 28px;
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <ul>
+            <li>
+                <button class="button-plus">+</button>
+                <p class="button-plus_text">0</p>
+            </li>
+            <li>
+                <button class="button-minus">-</button>
+                <p class="button-minus_text">0</p>                
+            </li>
+        </ul>
+    </section>
+    
+    <script>        
+        const buttonPlus = document.querySelector('.button-plus');
+        const plusText = document.querySelector('.button-plus_text');
+        const buttonMinus = document.querySelector('.button-minus');        
+        const minusText = document.querySelector('.button-minus_text');
+
+        const getData = () => {
+            fetch('http://localhost:3000/counter', {
+                method: 'GET',
+            })
+            .then(res => res.json())
+            .then(res => {
+                plusText.innerText = res.counter.plus;
+                minusText.innerText = res.counter.minus;
+            })
+            .catch(function (error) {
+                console.error('error: ', error);
+            });
+        };
+
+        getData();
+
+        function updateCounter(data) {
+            fetch('http://localhost:3000/counter', {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ data })
+            })
+            .then(res => res.json())
+            .then(res => {
+                plusText.innerText = res.counter.plus;
+                minusText.innerText = res.counter.minus;
+            })
+            .catch(error => {
+                console.error('error: ', error);
+            });
+        };
+
+        buttonPlus.addEventListener('click', () => {
+            updateCounter("plus");
+        });
+
+        buttonMinus.addEventListener('click', () => {
+            updateCounter("minus");
+        });
+    </script>
+</body>
+
+</html>
